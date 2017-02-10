@@ -18,7 +18,7 @@ class DriversController extends Controller{
   public function showIndex(){
    \Session::flash('warning_msg','Please update your information.');
    $driver = User::find(Auth::user()->driver_id);
-   $reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(100);
+   $reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(8);
    return view('drivers.home' , array('driver' => Auth::user(), 'reviews'=>$reviews));
  }
 

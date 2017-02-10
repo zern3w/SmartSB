@@ -14,7 +14,7 @@ class Review extends Model
 
   public function parent()
   {
-    return $this->belongsTo('App\Sbparent');
+    return $this->belongsTo('App\Sbparent', 'parent_id');
   }
 
   public function driver()

@@ -85,3 +85,5 @@ Route::post('drivers/{id}', [
   'uses' => 'ReviewsController@createReview',
   'as' => 'review'
   ])->middleware('sbparent');
+
+Route::get('sbparent/service', 'ServiceController@getIndex')->middleware('sbparent');

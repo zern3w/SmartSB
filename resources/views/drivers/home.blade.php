@@ -43,7 +43,8 @@
           <div id="showMap"></div>
         </div>
         @endif
-        <div class="row">
+        <div class="container" style="padding: 20px;">
+       
         <p><b>Your Reviews: </b></p>
            @foreach($reviews as $review)
               <hr>
@@ -53,14 +54,15 @@
                       <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
                     @endfor
 
-                    {{ $review->user ? $review->user->name : 'Anonymous'}} <span class="pull-right">{{$review->timeago}}</span> 
+                    {{  $review->parent->parent_firstname. " " . $review->parent->parent_firstname }} <span class="pull-right">{{$review->timeago}}</span> 
                     
                     <p>{{{$review->comment}}}</p>
                   </div>
                 </div>
               @endforeach
               {{ $reviews->links() }}
-        </div>
+       
+      </div>
       </div>
     </div>
   </div>
