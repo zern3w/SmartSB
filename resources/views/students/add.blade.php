@@ -46,7 +46,7 @@
                       <a href="/report/{{  $student->student_id  }}" class="btn btn-warning form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-calendar"></i> See the Bus Attendance</a>
 
                       @elseif ($state == 'review')
-                      <a href="/drivers/{{  $student->driver->driver_id  or null }})}}" class="btn btn-success form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-thumbs-up"></i> Review and Rating</a>
+                      <a href="{{route('review', ['id'=>$student->driver->driver_id ,'sId'=>$student->student_id ])}}" class="btn btn-success form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-thumbs-up"></i> Review and Rating</a>
 
                       @elseif ($state == 'addchild')
                       <form class="" action="{{route('student.destroy',$student->student_id)}}" method="post">

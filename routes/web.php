@@ -77,11 +77,16 @@ Route::group(['middleware' => ['web']], function() {
 
 Route::post('/getSchool', 'SchoolsController@getSchool');
 
-Route::get('drivers/{id}', 'ReviewsController@showDriverProfile');
+// Route::get('drivers/{id}/{sId}', 'ReviewsController@showDriverProfile');
+
+Route::get('drivers/{id}/{sId}', [
+  'uses' => 'ReviewsController@showDriverProfile',
+  'as' => 'review'
+  ]);
 
 // Route::post('drivers/{id}', 'ReviewsController@createReview');
 
-Route::post('drivers/{id}', [
+Route::post('drivers/{id}/{sId}', [
   'uses' => 'ReviewsController@createReview',
   'as' => 'review'
   ])->middleware('sbparent');

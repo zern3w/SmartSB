@@ -8,44 +8,49 @@ use App\User;
 use App\Review;
 use Auth;
 use Alert;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 
 class ReviewsController extends Controller
 {
 
-	public function storeReviewForProduct($driverID, $comment, $rating)
+	public function storeReviewForProduct($driverID, $studentID, $comment, $rating)
 	{
-		$driver = User::find($driverID);
-		$review = new Review();
-
-  // this will be added when we add user's login functionality
-		$review->driver_id = $driverID;
-		$review->parent_id = Auth::guard('sbparent')->user()->parent_id;
-		$review->comment = $comment;
-		$review->rating = $rating;
+		$driver             = User::find($driverID);
+		$review             = new Review();
+		$review->driver_id  = $driverID;
+		$review->parent_id  = Auth::guard('sbparent')->user()->parent_id;
+		$review->student_id = $studentID;
+		$review->comment    = $comment;
+		$review->rating     = $rating;
 		$review->save();
 
   // recalculate ratings for the specified product
 		$driver->recalculateRating();
 	}
 
-	public function showDriverProfile($id)
+	public function showDriverProfile($id, $sId)
 	{
 		$driver = User::find($id);
+		$date = Review::where('student_id', $sId)->where('driver_id', $id)->orderBy('id', 'desc')->first();
+		if (!$date){
+			$date = "";
+		}
+
 		if (!$driver){
 			Alert::info("Your child hasn't got the school bus provider.");
 			return redirect('/sbparent/review');
 		}else{
   // Get all reviews that are not spam for the product and paginate them
-			$reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(100);
+			$reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(10);
 		// dd($driver);
 
-			return View('single', array('driver'=>$driver,'reviews'=>$reviews));
+			return View('single', array('driver'=>$driver,'reviews'=>$reviews, 'sId'=>$sId, 'date'=>$date ));
 		}
 	}
 
-	public function createReview($id)
+	public function createReview($id, $sId)
 	{
 		$input = array(
 			'comment' => Input::get('comment'),
@@ -64,11 +69,11 @@ class ReviewsController extends Controller
 
   // If input passes validation - store the review in DB, otherwise return to product page with error message 
 		if ($validator->passes()) {
-			$this->storeReviewForProduct($id, $input['comment'], $input['rating']);
+			$this->storeReviewForProduct($id, $sId, $input['comment'], $input['rating']);
 			Alert::success("Your review has been posted!");
-			return Redirect::to('drivers/'.$id.'#reviews-anchor');
+			return Redirect::to('drivers/'.$id.'/'.$sId.'#reviews-anchor');
 		}
 
-		return Redirect::to('drivers/'.$id.'#reviews-anchor')->withErrors($validator)->withInput();
+		return Redirect::to('drivers/'.$id.'/'.$sId.'#reviews-anchor')->withErrors($validator)->withInput();
 	}
 }

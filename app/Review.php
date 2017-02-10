@@ -7,9 +7,9 @@ use Carbon\Carbon;
 
 class Review extends Model
 {
-      protected $fillable = [
-    'driver_id', 'parent_id', 'rating', 'comment', 'approved', 'spam'
-    ];
+  protected $fillable = [
+  'driver_id', 'parent_id', 'rating', 'comment', 'approved', 'spam'
+  ];
 
 
   public function parent()
@@ -40,6 +40,12 @@ class Review extends Model
   public function getTimeagoAttribute()
   {
     $date = Carbon::createFromTimeStamp(strtotime($this->created_at))->diffForHumans();
+    return $date;
+  }
+
+    public function getDayagoAttribute($query)
+  {
+    $date = Carbon::createFromTimeStamp(strtotime($this->created_at))->diffInDays();
     return $date;
   }
 

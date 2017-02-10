@@ -34,7 +34,7 @@ protected $primaryKey = 'student_id';
 
     public function parent()
     {
-        return $this->belongsTo('App\Parents');
+        return $this->belongsTo('App\Parents', 'parent_id');
     }
 
     public function attendance()

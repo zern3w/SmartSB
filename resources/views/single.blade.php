@@ -64,53 +64,60 @@
       <div class="row" style="margin-top:40px;">
         <div class="col-md-12">
           
+          @if (($date->dayago) >29 )
           <div class="text-right">
             <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
           </div>
+          @else
+          <div class="alert alert-info">
+           <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+           You can give them the feedback again after {{ -(($date->dayago) - 30) }} days. 
+         </div>
+         @endif
 
-          <div class="row" id="post-review-box" style="display:none;">
-            <div class="col-md-12">
-              <form accept-charset="UTF-8" action="{{route('review', $driver->driver_id)}}" method="post">
-                <input id="ratings-hidden" name="rating" type="hidden"> 
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
-
-                <div class="text-right">
-                  <div class="stars starrr" data-rating="0"></div>
-                  <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
-                    <span class="glyphicon glyphicon-remove"></span>Cancel</a>
-                    <button class="btn btn-success btn-lg" type="submit"><span style='Times New Roman'><i class="glyphicon glyphicon-save-file"> </i>Save</span></button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            
-            
-          </div>
-        </div>
-        @foreach($reviews as $review)
-        <hr>
-        <div class="row">
+         <div class="row" id="post-review-box" style="display:none;">
           <div class="col-md-12">
-            @for ($i=1; $i <= 5 ; $i++)
-            <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
-            @endfor
+            <form accept-charset="UTF-8" action="{{route('review', ['id'=>$driver->driver_id ,'sId'=>$sId ])}}" method="post">
+              <input id="ratings-hidden" name="rating" type="hidden"> 
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
 
-            {{  $review->parent->parent_firstname. " " . $review->parent->parent_firstname }}    <span class="pull-right">{{$review->timeago}}</span> 
-            
-            <p>{{{$review->comment}}}</p>
+              <div class="text-right">
+                <div class="stars starrr" data-rating="0"></div>
+                <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                  <span class="glyphicon glyphicon-remove"></span>Cancel</a>
+                  <button class="btn btn-success btn-lg" type="submit"><span style='Times New Roman'><i class="glyphicon glyphicon-save-file"> </i>Save</span></button>
+                </div>
+              </form>
+            </div>
           </div>
+          
+          
         </div>
-        @endforeach
-        {{ $reviews->links() }}
       </div>
+      @foreach($reviews as $review)
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          @for ($i=1; $i <= 5 ; $i++)
+          <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
+          @endfor
+
+          {{  $review->parent->parent_firstname. " " . $review->parent->parent_firstname }}    <span class="pull-right">{{$review->timeago}}</span> 
+
+          <p>{{{$review->comment}}}</p>
+        </div>
+      </div>
+      @endforeach
+      {{ $reviews->links() }}
     </div>
   </div>
-  @endsection
+</div>
+@endsection
 
 
-  @section('script')
-  <script src="{{asset('js/expanding.js')}}"></script>
-  <script src="{{asset('js/starrr.js')}}"></script>
-  <script src="{{asset('js/script.js')}}"></script>
-  @endsection
+@section('script')
+<script src="{{asset('js/expanding.js')}}"></script>
+<script src="{{asset('js/starrr.js')}}"></script>
+<script src="{{asset('js/script.js')}}"></script>
+@endsection

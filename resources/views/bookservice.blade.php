@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1" style="margin-top: 15px;">
 			<div class="panel panel-default">
-				<div class="panel-heading">Maps</div>
+				<div class="panel-heading">Find a Service</div>
 				<div class="panel-body">
 
 
