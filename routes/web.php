@@ -6,7 +6,6 @@ Route::get('/', function () {
   return view('main');
 });
 
-// Route::get('/', 'SearchController@getResults');
 Route::get('/search', 'SearchController@postResults');
 
 Route::get('/bookservice', function () {
@@ -30,20 +29,19 @@ Route::group(['middleware' => ['web']], function() {
 
 //----------------------------------Parent-----------------------------------
 Route::group(['prefix' => 'sbparent'], function () {
- Route::get('/', 'ParentsController@index')->middleware('sbparent');
-  Route::get('/login', 'SbparentAuth\LoginController@showLoginForm');
-  Route::post('/login', 'SbparentAuth\LoginController@login');
-  Route::post('/logout', 'SbparentAuth\LoginController@logout');
-  Route::get('/register', 'SbparentAuth\RegisterController@showRegistrationForm');
-  Route::post('/register', 'SbparentAuth\RegisterController@register');
-  Route::post('/password/email', 'SbparentAuth\ForgotPasswordController@sendResetLinkEmail');
-  Route::post('/password/reset', 'SbparentAuth\ResetPasswordController@reset');
-  Route::get('/password/reset', 'SbparentAuth\ForgotPasswordController@showLinkRequestForm');
-  Route::get('/password/reset/{token}', 'SbparentAuth\ResetPasswordController@showResetForm');
-  Route::get('/profile', 'ParentsController@showProfile')->middleware('sbparent');
-  Route::post('/profile', 'ParentsController@update_photo');
-  Route::get('/review', 'ParentsController@showReview');
-   Route::get('/childrenList', 'ParentsController@childrenList')->middleware('sbparent');
+ Route::get('/login', 'SbparentAuth\LoginController@showLoginForm')->middleware('guest');
+ Route::post('/login', 'SbparentAuth\LoginController@login')->middleware('guest');
+ Route::post('/logout', 'SbparentAuth\LoginController@logout')->middleware('sbparent');
+ Route::get('/register', 'SbparentAuth\RegisterController@showRegistrationForm')->middleware('guest');
+ Route::post('/register', 'SbparentAuth\RegisterController@register')->middleware('guest');
+ Route::post('/password/email', 'SbparentAuth\ForgotPasswordController@sendResetLinkEmail')->middleware('guest');
+ Route::post('/password/reset', 'SbparentAuth\ResetPasswordController@reset')->middleware('guest');
+ Route::get('/password/reset', 'SbparentAuth\ForgotPasswordController@showLinkRequestForm');
+ Route::get('/password/reset/{token}', 'SbparentAuth\ResetPasswordController@showResetForm');
+ Route::get('/profile', 'ParentsController@showProfile')->middleware('sbparent');
+ Route::post('/profile', 'ParentsController@update_photo')->middleware('sbparent');
+ Route::get('/review', 'ParentsController@showReview')->middleware('sbparent');
+ Route::get('/childrenList', 'ParentsController@childrenList')->middleware('sbparent');
 });
 
 Route::get('sbparent/changepassword/', 'SbparentAuth\ForgotPasswordController@showLinkRequestForm');
@@ -53,17 +51,20 @@ Route::post('/newParent', 'ParentsController@newParent');
 
 Route::patch('sbparent/profile', [
   'uses' => 'ParentsController@update_photo',
-  'as' => 'sbparent/profile'
+  'as' => 'sbparent/profile',
+  'middleware' => ['sbparent']
   ]);
 
 Route::patch('sbparent/login', [
   'uses' => 'SbparentAuth\LoginController@showLoginForm',
-  'as' => 'sbparent/login'
+  'as' => 'sbparent/login',
+  'middleware' => ['guest']
   ]);
 
 Route::group(['middleware' => ['sbparent']], function() {
-    Route::resource('parent','ParentsController');
-  });
+  Route::resource('parent','ParentsController');
+});
+
 //------------------------------Student-------------------------------------
 Route::get('/addchild', 'StudentsController@addchild')->middleware('sbparent');
 
@@ -77,18 +78,50 @@ Route::group(['middleware' => ['web']], function() {
 
 Route::post('/getSchool', 'SchoolsController@getSchool');
 
-// Route::get('drivers/{id}/{sId}', 'ReviewsController@showDriverProfile');
-
 Route::get('drivers/{id}/{sId}', [
   'uses' => 'ReviewsController@showDriverProfile',
   'as' => 'review'
   ]);
 
-// Route::post('drivers/{id}', 'ReviewsController@createReview');
-
 Route::post('drivers/{id}/{sId}', [
   'uses' => 'ReviewsController@createReview',
-  'as' => 'review'
-  ])->middleware('sbparent');
+  'as' => 'review',
+  'middleware' => ['sbparent']
+  ]);
 
-Route::get('sbparent/service', 'ServiceController@getIndex')->middleware('sbparent');
+Route::get('service/request/{id}/{dId}', [
+  'uses' => 'ServiceController@serviceRequest',
+  'as' => 'service.request',
+  'middleware' => ['sbparent']
+  ]);
+
+Route::get('sbparent', [
+  'uses' => 'ParentsController@showIndex',
+  'as' => 'parent.index',
+  'middleware' => ['sbparent']
+  ]);
+
+Route::get('request', [
+  'uses' => 'ServiceController@showrequest',
+  'as' => 'service.showrequest',
+  'middleware' => ['auth']
+  ]);
+
+Route::get('children/list/{dId}', [
+  'uses' => 'ParentsController@childRequest',
+  'as' => 'service.childrequest',
+  'middleware' => ['sbparent']
+  ]);
+
+Route::get('/request/delete/{id}', [
+  'uses' => 'ServiceController@deleteRequest',
+  'as' => 'request.delete',
+  'middleware' => ['auth'],
+  ]);
+
+Route::get('/request/accept/{id}', [
+  'uses'       => 'ServiceController@acceptRequest',
+  'as'         => 'request.accept',
+  'middleware' => ['auth'],
+  ]);
+

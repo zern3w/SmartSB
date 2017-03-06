@@ -31,87 +31,100 @@
         @endfor
         {{ number_format($driver->rating_cache, 1)}} stars
       </p>
-      <a href="" class="btn btn-primary form-control" >
+      @if (Auth::guard("sbparent")->user())
+      <a href="{{ route('service.childrequest', $driver->driver_id) }}" class="btn btn-primary form-control" >
         <i class="glyphicon glyphicon-send"></i> Request</a>
+        @elseif (Auth::guest())
+        @endif
+      </div>
+      </div>
+
+  <div class="well" id="reviews-anchor">
+    <div class="row">
+      <div class="col-md-12">
+        @if(Session::get('errors'))
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h5>There were errors while submitting this review:</h5>
+          @foreach($errors->all(':message') as $message)
+          {{$message}}
+          @endforeach
+        </div>
+        @endif
+
+        @include('alert')
+
+        @if(Session::has('review_removed'))
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h5>Your review has been removed!</h5>
+        </div>
+        @endif
       </div>
     </div>
-    
 
-    <div class="well" id="reviews-anchor">
-      <div class="row">
-        <div class="col-md-12">
-          @if(Session::get('errors'))
-          <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h5>There were errors while submitting this review:</h5>
-            @foreach($errors->all('<li>:message</li>') as $message)
-            {{$message}}
-            @endforeach
-          </div>
-          @endif
+    <div class="row" style="margin-top:40px;">
+      <div class="col-md-12">
 
-          @include('alert')
-
-          @if(Session::has('review_removed'))
-          <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h5>Your review has been removed!</h5>
-          </div>
-          @endif
+      @if ($date)
+        @if (($date->dayago) >29)
+        <div class="text-right">
+          <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
         </div>
-      </div>
-
-      <div class="row" style="margin-top:40px;">
-        <div class="col-md-12">
-          
-          @if (($date->dayago) >29 )
-          <div class="text-right">
-            <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
-          </div>
-          @else
-          <div class="alert alert-info">
-           <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-           You can give them the feedback again after {{ -(($date->dayago) - 30) }} days. 
-         </div>
-         @endif
-
-         <div class="row" id="post-review-box" style="display:none;">
-          <div class="col-md-12">
-            <form accept-charset="UTF-8" action="{{route('review', ['id'=>$driver->driver_id ,'sId'=>$sId ])}}" method="post">
-              <input id="ratings-hidden" name="rating" type="hidden"> 
-              <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
-
-              <div class="text-right">
-                <div class="stars starrr" data-rating="0"></div>
-                <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
-                  <span class="glyphicon glyphicon-remove"></span>Cancel</a>
-                  <button class="btn btn-success btn-lg" type="submit"><span style='Times New Roman'><i class="glyphicon glyphicon-save-file"> </i>Save</span></button>
-                </div>
-              </form>
-            </div>
-          </div>
-          
-          
+        @else
+        <div class="alert alert-info">
+         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+         You can give them the feedback again after {{ -(($date->dayago) - 30) }} days. 
+       </div>
+       @endif
+       @else
+       <div class="text-right">
+          <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
         </div>
-      </div>
-      @foreach($reviews as $review)
-      <hr>
-      <div class="row">
+       @endif
+       @if ($driver->rating_count == 0)
+       <div class="alert alert-warning">
+         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+         No data in the database. 
+       </div>
+       @endif
+
+       <div class="row" id="post-review-box" style="display:none;">
         <div class="col-md-12">
-          @for ($i=1; $i <= 5 ; $i++)
-          <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
-          @endfor
+          <form accept-charset="UTF-8" action="{{route('review', ['id'=>$driver->driver_id ,'sId'=>$sId ])}}" method="post">
+            <input id="ratings-hidden" name="rating" type="hidden"> 
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
 
-          {{  $review->parent->parent_firstname. " " . $review->parent->parent_firstname }}    <span class="pull-right">{{$review->timeago}}</span> 
-
-          <p>{{{$review->comment}}}</p>
+            <div class="text-right">
+              <div class="stars starrr" data-rating="0"></div>
+              <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                <span class="glyphicon glyphicon-remove"></span>Cancel</a>
+                <button class="btn btn-success btn-lg" type="submit"><span style='Times New Roman'><i class="glyphicon glyphicon-save-file"> </i>Save</span></button>
+              </div>
+            </form>
+          </div>
         </div>
+
       </div>
-      @endforeach
-      {{ $reviews->links() }}
     </div>
+    @if ($reviews->count())
+    @foreach($reviews as $review)
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        @for ($i=1; $i <= 5 ; $i++)
+        <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
+        @endfor
+        {{  $review->student->parent->parent_firstname. " " . $review->student->parent->parent_lastname }}    <span class="pull-right">{{$review->timeago}}</span> 
+        <p>{{{$review->comment}}}</p>
+      </div>
+    </div>
+    @endforeach
+    {{ $reviews->links() }}
+    @endif
   </div>
+</div>
 </div>
 @endsection
 

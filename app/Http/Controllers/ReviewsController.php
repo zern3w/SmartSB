@@ -20,32 +20,39 @@ class ReviewsController extends Controller
 		$driver             = User::find($driverID);
 		$review             = new Review();
 		$review->driver_id  = $driverID;
-		$review->parent_id  = Auth::guard('sbparent')->user()->parent_id;
 		$review->student_id = $studentID;
 		$review->comment    = $comment;
 		$review->rating     = $rating;
 		$review->save();
 
-  // recalculate ratings for the specified product
-		$driver->recalculateRating();
+		$this->recalculateRating($driver);
 	}
+
+	public function recalculateRating($driver)
+    {
+		$driver               = User::where('driver_id', $driver->driver_id)->first();
+		$reviews              = $driver->reviews()->notSpam()->approved();
+		$avgRating            = $reviews->avg('rating');
+		$driver->rating_cache = round($avgRating,1);
+		$driver->rating_count = $reviews->count();
+		$driver->save();
+    }
 
 	public function showDriverProfile($id, $sId)
 	{
 		$driver = User::find($id);
-		$date = Review::where('student_id', $sId)->where('driver_id', $id)->orderBy('id', 'desc')->first();
+		$date   = Review::where('student_id', $sId)
+					->where('driver_id', $id)
+					->orderBy('id', 'desc')->first();
 		if (!$date){
 			$date = "";
 		}
 
 		if (!$driver){
-			Alert::info("Your child hasn't got the school bus provider.");
+			Alert::info("Your child hasn't got the school bus provider");
 			return redirect('/sbparent/review');
 		}else{
-  // Get all reviews that are not spam for the product and paginate them
 			$reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(10);
-		// dd($driver);
-
 			return View('single', array('driver'=>$driver,'reviews'=>$reviews, 'sId'=>$sId, 'date'=>$date ));
 		}
 	}
@@ -56,18 +63,15 @@ class ReviewsController extends Controller
 			'comment' => Input::get('comment'),
 			'rating'  => Input::get('rating')
 			);
-  // instantiate Rating model
 		$review = new Review;
 
-  // Validate that the user's input corresponds to the rules specified in the review model
 		$rules = array(
-			'comment'=>'required|min:10',
-			'rating'=>'required|integer|between:1,5'
+			'comment' =>'required|min:10',
+			'rating'  =>'required|integer|between:1,5'
 			);
 
 		$validator = Validator::make( $input, $rules);
 
-  // If input passes validation - store the review in DB, otherwise return to product page with error message 
 		if ($validator->passes()) {
 			$this->storeReviewForProduct($id, $sId, $input['comment'], $input['rating']);
 			Alert::success("Your review has been posted!");
@@ -76,4 +80,5 @@ class ReviewsController extends Controller
 
 		return Redirect::to('drivers/'.$id.'/'.$sId.'#reviews-anchor')->withErrors($validator)->withInput();
 	}
+
 }

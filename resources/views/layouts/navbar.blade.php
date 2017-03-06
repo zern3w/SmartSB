@@ -26,9 +26,9 @@
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
                 @if (Auth::guard("sbparent")->user())
-                <li><a href="{{ url('sbparent/') }}">Home</a></li>
+                <li><a href="{{ route('parent.index') }}">Home</a></li>
+                <li><a href="{{ url('/bookservice') }}">Find a Service</a></li>
                 <li><a href="{{ url('sbparent/childrenList') }}">Bus Attendance</a></li>
-                <li><a href="{{ url('sbparent/review') }}">Write a Review</a></li>
                 @include('layouts.parent-dropdown')
                 @elseif (! Auth::guest())
                 <li><a href="{{ url('/home') }}">Home</a></li>

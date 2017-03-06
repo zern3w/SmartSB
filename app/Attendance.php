@@ -11,11 +11,7 @@ class Attendance extends Model
 
     protected $primaryKey = 'atd_id';
     protected $table = 'attendance_reports';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
     protected $fillable = [
         'atd_status', 'created_at',
     ];

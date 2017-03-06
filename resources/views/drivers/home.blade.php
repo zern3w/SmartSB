@@ -9,12 +9,10 @@
         <div class="panel-body text-center">
 
           @if( empty($driver->platenum) )
-          @if(Session::has('warning_msg'))
           <div class="alert alert-warning">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
-            <em> {!! session('warning_msg') !!}</em>
+            <em> Please update your information.<a href="{{route('driver.edit',$driver->driver_id)}}">CLICK</a></em>
           </div>
-          @endif
           @endif
 
           <img src="/uploads/avatars/{{ $driver->photo }}" class="img-avatar">
@@ -32,6 +30,13 @@
                 <td>{{ $driver->platenum }}</td>
                 @endif
               </tr>
+              <tr>
+                <td><b>Availability:</b></td>
+                @if ($driver->availability == 1)
+                <td>available</td>
+                @else <td>unavailable</td>
+                @endif
+              </tr>
             </tbody>
             
           </table>
@@ -45,6 +50,7 @@
         @endif
         <div class="container" style="padding: 20px;">
        
+       @if (($reviews->count()))
         <p><b>Your Reviews: </b></p>
            @foreach($reviews as $review)
               <hr>
@@ -54,14 +60,14 @@
                       <span class="glyphicon glyphicon-star{{ ($i <= $review->rating) ? '' : '-empty'}}"></span>
                     @endfor
 
-                    {{  $review->parent->parent_firstname. " " . $review->parent->parent_firstname }} <span class="pull-right">{{$review->timeago}}</span> 
+                    {{  $review->student->parent->parent_firstname. " " . $review->student->parent->parent_lastname }} <span class="pull-right">{{$review->timeago}}</span> 
                     
                     <p>{{{$review->comment}}}</p>
                   </div>
                 </div>
               @endforeach
               {{ $reviews->links() }}
-       
+       @endif
       </div>
       </div>
     </div>

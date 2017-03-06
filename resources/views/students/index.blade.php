@@ -8,6 +8,9 @@
       </div>
       @include('alert')
       <div class="panel-body">
+        @if (!($students->count()))
+        No data in the database.
+        @else
         <table class="table table-striped">
           <thead>
             <th>No.</th>
@@ -37,15 +40,16 @@
                   <input type="hidden" name="_method" value="delete">
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                   <a href="/report/{{  $student->student_id  }}" class="btn btn-primary"><i class="fa fa-bus" aria-hidden="true"></i> Bus attedndance</a>
-                   <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this data');">
-                <i class="glyphicon glyphicon-trash"></i> Delete
-                          </button>
+                  <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this data');">
+                    <i class="glyphicon glyphicon-trash"></i> Delete
+                  </button>
                 </form>
               </td>
             </tr>
             @endforeach
           </tbody>
         </table>
+        @endif
       </div>
     </div>
   </div>

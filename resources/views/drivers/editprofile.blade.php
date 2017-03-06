@@ -225,8 +225,8 @@
 	</div>
 	<div id="driverMap"></div>
 	<ul id="geoData" class="email-textbox">
-		<input type="hidden" id="lat" name="lat" value="{{ $driver->lat }}" />
-		<input type="hidden" id="lon" name="lng" value="{{ $driver->lng }}" />
+		<input type="hidden" id="lat" name="lat" value="{{ $driver->lat or '0' }}" />
+		<input type="hidden" id="lon" name="lng" value="{{ $driver->lng or '0' }}" />
 	</ul>
 
 	<div class="form-group">

@@ -1,0 +1,36 @@
+Smart SchoolBus:
+  ✔ ServiceController; check duplicate @done (17-02-16 00:51)
+  ✔ Student list Driver show null msg @done (17-02-16 01:24)
+  ✔ Add driver_id to student when accept req @done (17-02-16 01:22)
+  ✔ Request button on map go to choose child @done (17-02-16 02:18)
+  ✔ Request button on search go to choose child @done (17-02-16 02:09)
+  ✔ UI problem children profile in parent @done (17-02-16 02:21)
+  ✔ UI problem leave rating in single @done (17-02-16 02:37)
+  ✔ Refactor recalculateRateing @done (17-02-16 02:49)
+  ✘ Alert redirect @cancelled (17-02-19 17:32)
+  ✘ Register success: sweet alert @cancelled (17-02-19 17:33)
+  
+  Refactor code:
+    Model:
+      ✔ Attendance @done (17-02-16 02:23)
+      ✔ Sbparent @done (17-02-16 02:23)
+      ✔ Review @done (17-02-16 02:24)
+      ✔ School @done (17-02-16 02:24)
+      ✔ ServiceRequest @done (17-02-16 01:25)
+      ✔ Student @done (17-02-16 02:25)
+      ✔ User @done (17-02-16 02:49)
+    Controller:
+      ✔ Driver @done (17-02-16 03:20)
+      ✔ Parent @done (17-02-16 03:09)
+      ✔ Student @done (17-02-16 03:20)
+      ✔ Review @done (17-02-16 02:53)
+      ✔ School @done (17-02-16 02:55)
+      ✔ Search @done (17-02-16 02:56)
+      ✔ Service @done (17-02-16 01:25)
+    Migration:
+      ✔ All @done (17-02-16 03:36)
+
+QUESTION:
+ ☐ write a review: show driver or child
+    EXTRA:
+      ✘ Email notification @cancelled (17-02-19 14:26)

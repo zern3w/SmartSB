@@ -62,8 +62,8 @@
           mapType = 'map';
         }else if (document.getElementById('driverMap')){
           mapType = 'driverMap';
-        }else if (document.getElementById('showMaps')){
-          mapType = 'showMaps';
+        }else if (document.getElementById('showMap')){
+          mapType = 'showMap';
         }
         createMap(myLatLng,mapType);
         alert("Failed to show the current location.");
@@ -141,17 +141,10 @@
     }
 
     function geocodeLatLng(geocoder, map, infowindow, lat, lng) {
-      // var input = document.getElementById('latlng').value;
-      // var latlngStr = input.split(',', 2);
       var latlng = {lat: lat, lng: lng};
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
           if (results[1]) {
-            // map.setZoom(13);
-            // var marker = new google.maps.Marker({
-            //   position: latlng,
-            //   map: map
-            // });
             $('#address').val(results[0].formatted_address);
             infowindow.setContent(results[1].formatted_address);
             infowindow.open(map, marker);
@@ -218,7 +211,6 @@
       removeMarkers();
 
       $.post('http://localhost:8000/searchDrivers', {lat:lat, lng:lng, distance:distance}, function(match){
-          // console.log(lat,lng,distance);
 
           $.each(match,function(i,val){
             var glatval = val.lat;
@@ -257,10 +249,9 @@
             for (i = 0; i < star; i++) {
              contentString +=  '<span class="glyphicon glyphicon-star"></span>';
            }
-           contentString+= "  " + val.rating_cache + " stars";
-
-           contentString += '</p>'
-           '<a href="" class="btn btn-primary form-control">' +
+           contentString += "  " + val.rating_cache + " stars" +
+            '</p>' +
+           '<a href="/children/list/'+ val.driver_id +'" class="btn btn-primary form-control">' +
            '<i class="glyphicon glyphicon-send"></i> Request</a>' +
            '</div>'+
            '</div>';
@@ -300,6 +291,10 @@
           var glatval = val.lat;
           var glngval = val.lng;
           latlng = {lat: glatval, lng: glngval};
+          // console.log(glngval);
+          if(glngval == null){
+
+          }
           map = new google.maps.Map(document.getElementById(mapType), {
             center: latlng,
             scrollwheel: false,
@@ -312,6 +307,10 @@
         });
         console.log("inside",latlng,mapType);
         if (mapType == 'driverMap'){
+           console.log(latlng);
+           if(latlng.lat == null){
+            geoLocationInit();
+          }
           geocoder = new google.maps.Geocoder();
           infowindow = new google.maps.InfoWindow();
           createMap(latlng,mapType);

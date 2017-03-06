@@ -6,15 +6,15 @@
 
   <ul class="dropdown-menu" role="menu">
     <li>
-        <a href="{{ url('sbparent/review')}}">
-            <i class="glyphicon glyphicon-list-alt"></i>  Service Requests
+        <a href="{{ route('service.showrequest') }}">
+            <i class="glyphicon glyphicon-send"> </i>  Service Requests
         </a>
     </li>
 
     
     <li>
         <a href="{{ url('profile') }}">
-            <i class="glyphicon glyphicon-user"></i>  Edit Profile
+            <i class="glyphicon glyphicon-user"> </i>  Edit Profile
         </a>
 
         <form  action="{{ url('/profile') }}" method="POST" style="display: none;">
@@ -25,7 +25,7 @@
         <a href="{{ url('/logout') }}"
         onclick="event.preventDefault();
         document.getElementById('logout-form').submit();">
-        <i class="glyphicon glyphicon-log-out"></i>  Logout
+        <i class="glyphicon glyphicon-log-out"> </i>  Logout
     </a>
 
     <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">

@@ -4,17 +4,21 @@
         <div class="row">
           <div class="panel panel-default">
             <div class="panel-heading">
+            @if ($state)
               @if ($state == 'atd')
               <h3>Bus Attendance</h3>
 
               @elseif ($state == 'review')
               <h3>Review and Rating</h3>
 
+                @elseif ($state == 'req')
+              <h3>Choose your child to use the service</h3>
+
               @elseif ($state == 'addchild')
               <h3>My Children</h3>
               <a href="{{route('student.create')}}" class="btn-lg btn-success pull-right">Add Child</a><br><br>
               @endif
-
+@endif
             </div>
             <div class="panel-body">
 
@@ -41,12 +45,15 @@
                         <b>Phone:</b> {{$student->phone}}</br>
                         <b>Emergencency Contact:</b> {{$student->emergency_tel}}
                       </p>
-
+@if ($state)
                       @if ($state == 'atd')
                       <a href="/report/{{  $student->student_id  }}" class="btn btn-warning form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-calendar"></i> See the Bus Attendance</a>
 
                       @elseif ($state == 'review')
                       <a href="{{route('review', ['id'=>$student->driver->driver_id ,'sId'=>$student->student_id ])}}" class="btn btn-success form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-thumbs-up"></i> Review and Rating</a>
+
+                       @elseif ($state == 'req')
+                      <a href="{{ route('service.request', ['id' => $student->student_id, 'dId' => $driver_id]) }}" class="btn btn-success form-control" style="margin-right: 10px"><i class="glyphicon glyphicon-check"></i> Select</a>
 
                       @elseif ($state == 'addchild')
                       <form class="" action="{{route('student.destroy',$student->student_id)}}" method="post">
@@ -62,6 +69,7 @@
                       </p>
                     </form>
                     @endif
+                     @endif
                   </div>
                 </div>
               </div>

@@ -8,13 +8,17 @@ use Carbon\Carbon;
 class Review extends Model
 {
   protected $fillable = [
-  'driver_id', 'parent_id', 'rating', 'comment', 'approved', 'spam'
+  'driver_id', 'student_id', 'rating', 'comment', 'approved', 'spam'
   ];
-
 
   public function parent()
   {
     return $this->belongsTo('App\Sbparent', 'parent_id');
+  }
+
+  public function student()
+  {
+    return $this->belongsTo('App\Student', 'student_id');
   }
 
   public function driver()
@@ -43,7 +47,7 @@ class Review extends Model
     return $date;
   }
 
-    public function getDayagoAttribute($query)
+  public function getDayagoAttribute($query)
   {
     $date = Carbon::createFromTimeStamp(strtotime($this->created_at))->diffInDays();
     return $date;

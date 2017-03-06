@@ -22,8 +22,8 @@
    <div class="col-md-4">
     <div class="col col-social-icons">
       <h4>Follow us</h4>
-      <a href="https://www.facebook.com/zEr.nEw"><i class="fa fa-facebook"></i></a>
-      <a href="https://www.facebook.com/zEr.nEw""><i class="fa fa-twitter"></i></a>
+      <a href="https://www.facebook.com/SmartSchoolBus/"><i class="fa fa-facebook"></i></a>
+      <a href="https://twitter.com/smartschoolbus1""><i class="fa fa-twitter"></i></a>
     </div>
   </div>
 

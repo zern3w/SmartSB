@@ -15,34 +15,38 @@ use Illuminate\Support\Facades\Redirect;
 
 class DriversController extends Controller{
 
-  public function showIndex(){
-   \Session::flash('warning_msg','Please update your information.');
-   $driver = User::find(Auth::user()->driver_id);
+  public function showIndex()
+  {
+   $driver  = User::find(Auth::user()->driver_id);
    $reviews = $driver->reviews()->with('parent')->approved()->notSpam()->orderBy('created_at','desc')->paginate(8);
    return view('drivers.home' , array('driver' => Auth::user(), 'reviews'=>$reviews));
  }
 
- public function showProfile(){
+ public function showProfile()
+ {
   return view('drivers.profile' , array('driver' => Auth::user()));
 }
 
-public function showStudentList(){
-  $students = $this->getStudentList();
-  if ( empty($student)){
-    
-  }
-  return view('students.index',['students' => $students]);
+public function showStudentList()
+{
+  $students = $this->getStudentList(Auth::user()->driver_id);
+  if ( empty($student)){}
+    return view('students.index',['students' => $students]);
 }
 
-public function getStudentList(){
-  $user = Auth::user();
-  $students =  Student::where('driver_id', $user->driver_id )->get();
+public function getStudentList($dId)
+{
+
+  $user     = Auth::user();
+  // $students =  Student::where('driver_id', $user->driver_id )->get();
+  $students =  Student::where('driver_id', $dId )->get();
   return $students;
 }
 
-public function update_photo(Request $request){
-  $rules = array(
-    'photo' => 'image'
+public function update_photo(Request $request)
+{
+  $rules     = array(
+    'photo'    => 'image'
     );
   $validator = Validator::make(Input::all(), $rules);
 
@@ -51,33 +55,34 @@ public function update_photo(Request $request){
     ->withErrors($validator)
     ->withInput();
   }
-        // Handle the user upload photo
   else if($request->hasFile('photo')){
-   $photo = $request->file('photo');
+   $photo    = $request->file('photo');
    $filename = time() . '.' . $photo->getClientOriginalExtension();
    Image::make($photo)->resize(300,300)->save(public_path('/uploads/avatars/' . $filename));
    
-   $user = Auth::user();
+   $user        = Auth::user();
+   // $user     = User::where('driver_id', $dId)->first();
    $user->photo = $filename;
    $user->save();
- }  return view('drivers.profile' , array('driver' => Auth::user()));
+}return view('drivers.profile' , array('driver' => Auth::user()));
+
 }
 
-//edit
-public function edit($id){
-  $driver = User::findOrFail($id);
+public function edit($id)
+{
+  $driver  = User::findOrFail($id);
   $schools = School::all();
   return view('drivers.editprofile',compact('driver','schools'));
 }
 
-//update
-public function update(Request $request, $id)  {
+public function update(Request $request, $id)
+{
  $this->validate($request,[
    'driver_firstname' => 'required|max:255|alpha_spaces',
-   'driver_lastname' => 'required|max:255|alpha_spaces',
-   'phone' => 'required|regex:/(0)[0-9]{9}/',
-   'platenum' => 'required|regex:/[0-9ก-ฮa-zA-Z][ก-ฮa-zA-Z][ก-ฮa-zA-Z][0-9]{1,4}/',
-   'fee' => 'required|numeric',
+   'driver_lastname'  => 'required|max:255|alpha_spaces',
+   'phone'            => 'required|regex:/(0)[0-9]{9}/',
+   'platenum'         => 'required|regex:/[0-9ก-ฮa-zA-Z][ก-ฮa-zA-Z][ก-ฮa-zA-Z][0-9]{1,4}/',
+   'fee'              => 'required|numeric',
    ]);
  $driver = User::findOrFail($id);
  $driver->driver_firstname  = $request->driver_firstname;
@@ -97,12 +102,13 @@ public function update(Request $request, $id)  {
  $driver->save();
  Alert::success('Your profile has been updated!', 'Successfully!');
  return view('drivers.profile' , array('driver' => Auth::user()));
+  // return User::findOrFail($id);;
 }
 
-//search drivers nearby
-public function searchDrivers(Request $request){
-  $lat = $request->lat;
-  $lng = $request->lng;
+public function searchDrivers(Request $request)
+{
+  $lat      = $request->lat;
+  $lng      = $request->lng;
   $distance = $request->distance;
   Log::info('Lng: '.$lng);
   Log::info('Distance: '.$distance);
@@ -116,28 +122,36 @@ public function searchDrivers(Request $request){
   }else{
     $drivers=User::where('availability', 1)->whereBetween('lat', [$lat-0.10, $lat+0.10])->whereBetween('lng',[$lng-0.10, $lng+0.10])->get();
   }
-  // $schools = School::all();
   return $drivers;
 }
 
-public function getLocation(){
-
-  return array('drivers' => Auth::user());
+public function getDriver($dId)
+{
+  $result = User::where('driver_id', $dId)->first();
+  return $result;
 }
 
-public function getStudentReport($id){
+public function getStudentReport($id)
+{
   $student = Student::where('student_id', $id)->first();
   $reports = Attendance::where('student_id', $id )->limit(30)->get();
 
   return view('parents.atd-report',array('student' => $student, 'reports' => $reports));
 }
 
-public function getStudentInfo($id){
-  ;
+public function hasProfile($dId)
+{
+  return (bool)$driver  = User::where('driver_id', $dId)->whereNotNull('platenum')->first();
 }
 
-public function showStudentReport(){
-  ;
+public function hasStudent($dId)
+{
+  return (bool)$student  = Student::where('driver_id', $dId)->first();
+}
+
+public function getLocation()
+{
+  return array('drivers' => Auth::user());
 }
 
 }

@@ -5,7 +5,14 @@
     </a>
 
     <ul class="dropdown-menu" role="menu">
+
       <li>
+        <a href="{{ url('sbparent/review') }}">
+          <i class="glyphicon glyphicon-saved"></i>  Write a review
+        </a>
+      </li>
+
+        <li>
         <a href="/addchild">
           <i class="glyphicon glyphicon-briefcase"></i>  Child Profile
         </a>
@@ -14,15 +21,8 @@
           {{ csrf_field() }}
         </form>
       </li>
-      <li>
-        <a href="{{route('student.index')}}">
-          <i class="glyphicon glyphicon-saved"></i>  My Request
-        </a>
 
-        <form  action="{{ url('/sbparent/addchild') }}" method="POST" style="display: none;">
-          {{ csrf_field() }}
-        </form>
-      </li>
+
       <li>
         <a href="{{ url('/sbparent/profile') }}">
           <i class="glyphicon glyphicon-user"></i>  Edit Profile

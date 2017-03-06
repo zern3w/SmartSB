@@ -127,6 +127,13 @@
 	margin: 0 auto;
 }
 
+.img-driverInfo{
+	width: 100px;
+	height: auto;
+	border: 3px solid #fff;
+	margin-top: -20px;
+}
+
 .img-main{
 	width: 500px;
 	height: 500px;

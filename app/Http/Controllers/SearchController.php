@@ -24,7 +24,7 @@ class SearchController extends Controller
                 '<img src="/uploads/avatars/'. $driver->photo .'" class="img-infowindow">'.
                 '<div class="caption">'.
                 '<h4 class="pull-right">'. "฿". $driver->fee  . '</h4>'.
-                '<h4><a href="'. url("drivers/".$driver->driver_id) .'">' .$driver->driver_firstname. " " . $driver->driver_lastname .'</a></h4>'.
+                '<h4><a href="'. url("drivers/".$driver->driver_id)."/0".'">' .$driver->driver_firstname. " " . $driver->driver_lastname .'</a></h4>'.
                 '<p>' .$driver->note .'</p>'.
                 '</div>'.
                 '<div class="ratings">'.
@@ -32,7 +32,7 @@ class SearchController extends Controller
                 <p>'.
                  number_format($driver->rating_cache, 1) ." stars".
                  '</p>'.
-                 '<a href="" class="btn btn-primary form-control" >'.
+                 '<a href="'. url("children/list/".$driver->driver_id) .'" class="btn btn-primary form-control" >'.
                  '<i class="glyphicon glyphicon-send"></i> Request</a>'.
                  ' </div>'.
                  '</div>'.
